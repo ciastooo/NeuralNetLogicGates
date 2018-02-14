@@ -8,7 +8,7 @@ namespace NeuralNetLogicGates.ActivationFunctions
     {
         public static double Count(double x)
         {
-            return 1 / (1 + Math.Exp(x));
+            return 1 / (1 + Math.Exp(-x));
         }
     }
 }
