@@ -49,6 +49,7 @@ namespace NeuralNetLogicGates.NeuralNetStructure
                 this.Layers.Add(hiddenLayer);
             }
             Layer outputLayer = new Layer(outputNeuronsCount, this.Layers[this.Layers.Count - 1]);
+            this.Layers.Add(outputLayer);
         }
 
         public void Propagate(double[] values)

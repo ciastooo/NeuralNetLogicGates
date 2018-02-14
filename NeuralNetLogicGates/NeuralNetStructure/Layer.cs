@@ -19,7 +19,6 @@ namespace NeuralNetLogicGates.NeuralNetStructure
                     for (int j = 0; j < previous.Neurons.Count; j++)
                     {
                         Neuron previousNeuron = previous.Neurons[j];
-                        previousNeuron.AddNextNeuron(addingNeuron, new Random().NextDouble());
                         addingNeuron.AddPreviousNeuron(previousNeuron, new Random().NextDouble());
                     }
                 }

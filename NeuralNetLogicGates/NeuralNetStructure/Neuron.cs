@@ -23,12 +23,7 @@ namespace NeuralNetLogicGates.NeuralNetStructure
         {
             Dendrite addingDendrite = new Dendrite(weight, previous, this);
             this.PreviousDendrites.Add(addingDendrite);
-        }
-
-        public void AddNextNeuron(Neuron next, double weight)
-        {
-            Dendrite addingDendrite = new Dendrite(weight, this, next);
-            this.NextDendrites.Add(addingDendrite);
+            previous.NextDendrites.Add(addingDendrite);
         }
     }
 }
