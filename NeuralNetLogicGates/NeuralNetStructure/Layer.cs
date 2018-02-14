@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NeuralNetLogicGates.NeuralNet
+namespace NeuralNetLogicGates.NeuralNetStructure
 {
     class Layer
     {
-        private IList<Neuron> Neurons { get; }
-
+        public IList<Neuron> Neurons { get; }
+        public int NeuronsCount { get { return this.Neurons.Count; } }
         public Layer(int neuronsCount, Layer previous = null)
         {
             this.Neurons = new List<Neuron>();

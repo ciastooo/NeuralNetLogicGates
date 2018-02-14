@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NeuralNetLogicGates.NeuralNet
+namespace NeuralNetLogicGates.NeuralNetStructure
 {
     class Neuron
     {
-        private IList<Dendrite> PreviousDendrites { get; }
-        private IList<Dendrite> NextDendrites { get; }
+        public IList<Dendrite> PreviousDendrites { get; }
+        public IList<Dendrite> NextDendrites { get; }
         public double Value { get; set; }
         public double Bias { get; set; }
 
