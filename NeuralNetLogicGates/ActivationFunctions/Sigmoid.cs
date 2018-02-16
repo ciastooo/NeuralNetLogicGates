@@ -10,5 +10,10 @@ namespace NeuralNetLogicGates.ActivationFunctions
         {
             return 1 / (1 + Math.Exp(-x));
         }
+
+        public static double Derivative(double x)
+        {
+            return x * (1 - x);
+        }
     }
 }

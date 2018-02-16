@@ -24,6 +24,8 @@ namespace NeuralNetLogicGates
             testNet.Propagate(testValues);
             Console.WriteLine(testNet.OutputLayer.Neurons[0].Value);
             Console.WriteLine(testNet.OutputLayer.Neurons[1].Value);
+            double[] testTrain = { 0.01, 0.99 };
+            testNet.Train(testValues, testTrain);
             Console.WriteLine("END");
         }
     }

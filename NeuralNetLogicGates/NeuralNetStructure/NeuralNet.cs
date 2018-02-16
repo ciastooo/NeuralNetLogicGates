@@ -81,5 +81,20 @@ namespace NeuralNetLogicGates.NeuralNetStructure
                 }
             }
         }
+
+        public void Train(double[] input, double[] output)
+        {
+            if (output.Length != this.OutputLayer.NeuronsCount)
+            {
+                throw new Exception("Number of passed output values does not match with number of output neurons");
+            }
+            this.Propagate(input);
+            double totalError = 0;
+            for(int i = 0;  i < output.Length; i++)
+            {
+                totalError += Math.Pow((output[i] - this.OutputLayer.Neurons[i].Value), 2) / 2;
+            }
+            
+        }
     }
 }
