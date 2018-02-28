@@ -22,10 +22,13 @@ namespace NeuralNetLogicGates
             testNet.OutputLayer.Neurons[1].Bias= 0.6;
             double[] testValues = { 0.05, 0.1};
             testNet.Propagate(testValues);
+            double[] testTrain = { 0.01, 0.99 };
+            for(int i = 0; i <= 10000; i++)
+            {
+                testNet.Train(testValues, testTrain);
+            }
             Console.WriteLine(testNet.OutputLayer.Neurons[0].Value);
             Console.WriteLine(testNet.OutputLayer.Neurons[1].Value);
-            double[] testTrain = { 0.01, 0.99 };
-            testNet.Train(testValues, testTrain);
             Console.WriteLine("END");
         }
     }

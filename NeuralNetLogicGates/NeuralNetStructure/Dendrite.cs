@@ -6,9 +6,10 @@ namespace NeuralNetLogicGates.NeuralNetStructure
 {
     class Dendrite
     {
-        private Neuron PreviousNeuron { get; }
-        private Neuron NextNeuron { get; }
+        public Neuron PreviousNeuron { get; }
+        public Neuron NextNeuron { get; }
         public double Weight { get; set; }
+        public double Delta { get; set; }
 
         public Dendrite(double weight, Neuron previous, Neuron next)
         {

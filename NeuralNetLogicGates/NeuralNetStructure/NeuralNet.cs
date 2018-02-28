@@ -37,6 +37,7 @@ namespace NeuralNetLogicGates.NeuralNetStructure
                 }
             }
         }
+        public double TrainingRate = 0.5;
 
         public NeuralNet(int inputNeuronsCount, int outputNeuronsCount, int hiddenLayersCount, int hiddenLayerNeuronsCount)
         {
@@ -68,11 +69,11 @@ namespace NeuralNetLogicGates.NeuralNetStructure
             {
                 Layer currentLayer = this.Layers[layerIndex];
                 Layer previousLayer = this.Layers[layerIndex - 1];
-                for(int currentLayerNeuronIndex = 0; currentLayerNeuronIndex < currentLayer.NeuronsCount; currentLayerNeuronIndex++)
+                for (int currentLayerNeuronIndex = 0; currentLayerNeuronIndex < currentLayer.NeuronsCount; currentLayerNeuronIndex++)
                 {
                     Neuron currentLayerNeuron = currentLayer.Neurons[currentLayerNeuronIndex];
                     currentLayerNeuron.Value = currentLayerNeuron.Bias;
-                    for(int previousLayerNeuronIndex = 0; previousLayerNeuronIndex < previousLayer.NeuronsCount; previousLayerNeuronIndex++)
+                    for (int previousLayerNeuronIndex = 0; previousLayerNeuronIndex < previousLayer.NeuronsCount; previousLayerNeuronIndex++)
                     {
                         Neuron previousLayerNeuron = previousLayer.Neurons[previousLayerNeuronIndex];
                         currentLayerNeuron.Value += previousLayerNeuron.Value * previousLayerNeuron.NextDendrites[currentLayerNeuronIndex].Weight;
@@ -89,12 +90,46 @@ namespace NeuralNetLogicGates.NeuralNetStructure
                 throw new Exception("Number of passed output values does not match with number of output neurons");
             }
             this.Propagate(input);
-            double totalError = 0;
-            for(int i = 0;  i < output.Length; i++)
+            // calculating delta for weights that are before output neurons
+            for(int neuronIndex = 0; neuronIndex < this.OutputLayer.NeuronsCount; neuronIndex++)
             {
-                totalError += Math.Pow((output[i] - this.OutputLayer.Neurons[i].Value), 2) / 2;
+                Neuron outputNeuron = this.OutputLayer.Neurons[neuronIndex];
+                outputNeuron.Delta = (outputNeuron.Value - output[neuronIndex]) * ActivationFunctions.Sigmoid.Derivative(outputNeuron.Value);
+                foreach(Dendrite dendrite in outputNeuron.PreviousDendrites)
+                {
+                    dendrite.Delta = outputNeuron.Delta * dendrite.PreviousNeuron.Value;
+                }
             }
-            
+            // calculating delta for the rest of weights
+            for(int layerIndex = this.LayersCount-2; layerIndex > 0; layerIndex--)
+            {
+                Layer currentLayer = this.Layers[layerIndex];
+                for(int neuronIndex = 0; neuronIndex < currentLayer.NeuronsCount; neuronIndex++)
+                {
+                    Neuron currentNeuron = currentLayer.Neurons[neuronIndex];
+                    currentNeuron.Delta = 0;
+                    foreach(Dendrite dendrite in currentNeuron.NextDendrites)
+                    {
+                        currentNeuron.Delta += dendrite.NextNeuron.Delta * dendrite.Weight;
+                    }
+                    currentNeuron.Delta *= ActivationFunctions.Sigmoid.Derivative(currentNeuron.Value);
+                    foreach(Dendrite dendrite in currentNeuron.PreviousDendrites)
+                    {
+                        dendrite.Delta = currentNeuron.Delta * dendrite.PreviousNeuron.Value;
+                    }
+                }
+            }
+            // updating weights
+            foreach(Layer layer in this.Layers)
+            {
+                foreach(Neuron neuron in layer.Neurons)
+                {
+                    foreach(Dendrite dendrite in neuron.NextDendrites)
+                    {
+                        dendrite.Weight -= dendrite.Delta*this.TrainingRate;
+                    }
+                }
+            }
         }
     }
 }
