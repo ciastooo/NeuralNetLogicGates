@@ -6,7 +6,7 @@ namespace NeuralNetLogicGates.DataModels
 {
     public class NotGate: LogicGate
     {
-        public NotGate()
+        public NotGate(): base()
         {
             this.AddLearningData(new double[] { 0 }, new double[] { 1 });
             this.AddLearningData(new double[] { 1 }, new double[] { 0 });
