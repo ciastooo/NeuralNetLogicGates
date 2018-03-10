@@ -7,29 +7,46 @@ namespace NeuralNetLogicGates
     {
         static void Main(string[] args)
         {
-            var testNet = new NeuralNet(2, 2, 1, 2);
-            testNet.InputLayer.Neurons[0].NextDendrites[0].Weight = 0.15;
-            testNet.InputLayer.Neurons[0].NextDendrites[1].Weight = 0.25;
-            testNet.InputLayer.Neurons[1].NextDendrites[0].Weight = 0.20;
-            testNet.InputLayer.Neurons[1].NextDendrites[1].Weight = 0.30;
-            testNet.Layers[1].Neurons[0].Bias= 0.35;
-            testNet.Layers[1].Neurons[1].Bias= 0.35;
-            testNet.Layers[1].Neurons[0].NextDendrites[0].Weight = 0.40;
-            testNet.Layers[1].Neurons[0].NextDendrites[1].Weight = 0.50;
-            testNet.Layers[1].Neurons[1].NextDendrites[0].Weight = 0.45;
-            testNet.Layers[1].Neurons[1].NextDendrites[1].Weight = 0.55;
-            testNet.OutputLayer.Neurons[0].Bias= 0.6;
-            testNet.OutputLayer.Neurons[1].Bias= 0.6;
-            double[] testValues = { 0.05, 0.1};
-            testNet.Propagate(testValues);
-            double[] testTrain = { 0.01, 0.99 };
-            for(int i = 0; i <= 10000; i++)
-            {
-                testNet.Train(testValues, testTrain);
+            var test = new NeuralNet(2, 1, 2, 3);
+            double[] a = {0, 0};
+            double[] aa = {0};
+            double[] b = {1, 0};
+            double[] bb = {0};
+            double[] c = {0, 1};
+            double[] cc = {0};
+            double[] d = {1, 1};
+            double[] dd = {1};
+            int j = 0;
+            test.Propagate(a);
+            Console.WriteLine(test.OutputLayer.Neurons[0].Value);
+            test.Propagate(d);
+            Console.WriteLine(test.OutputLayer.Neurons[0].Value);
+            for(int i = 0; i < 100000; i++) {
+                switch(j) {
+                case 0:
+                        test.Train(a, aa);
+                break;
+                case 1:
+                        test.Train(b, bb);
+                break;
+                case 2:
+                        test.Train(c,cc);
+                break;
+                case 3:
+                default:
+                        test.Train(d, dd);
+                break;
+                }
+                j++;
+                if(j==4) {
+                    j = 0;
+                }
             }
-            Console.WriteLine(testNet.OutputLayer.Neurons[0].Value);
-            Console.WriteLine(testNet.OutputLayer.Neurons[1].Value);
             Console.WriteLine("END");
+            test.Propagate(a);
+            Console.WriteLine(test.OutputLayer.Neurons[0].Value);
+            test.Propagate(d);
+            Console.WriteLine(test.OutputLayer.Neurons[0].Value);
         }
     }
 }
