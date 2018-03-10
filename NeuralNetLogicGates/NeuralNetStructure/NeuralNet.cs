@@ -135,7 +135,7 @@ namespace NeuralNetLogicGates.NeuralNetStructure
 
         public void TrainWithData(LogicGate data, int trainingIterations = 10)
         {
-            if(this.Layers.Count == 0)
+            if (this.Layers.Count == 0)
             {
                 throw new Exception("Neural net not initialized");
             }
@@ -143,20 +143,36 @@ namespace NeuralNetLogicGates.NeuralNetStructure
             {
                 throw new Exception("Wrong learning data");
             }
-            int i = 0;
-            while(i < trainingIterations)
+            foreach (var trainingSet in data.learningData)
             {
-                foreach(var trainingSet in data.learningData)
+                if (trainingSet.Count < 2)
                 {
-                    if(trainingSet.Count < 2)
-                    {
-                        throw new Exception("Wrong learning data");
-                    }
+                    throw new Exception("Wrong learning data");
+                }
+                var inputData = trainingSet[0].ToArray();
+                var outputData = trainingSet[1].ToArray();
+                this.Propagate(inputData);
+                Console.WriteLine($"Input data: ({string.Join(",", inputData)})   Output data: ({this.OutputLayer.Neurons[0].Value})  Ideal ({string.Join(",", outputData)})");
+            }
+            Console.WriteLine("Training...");
+            int i = 0;
+            while (i < trainingIterations)
+            {
+                foreach (var trainingSet in data.learningData)
+                {
+
                     var inputData = trainingSet[0].ToArray();
                     var outputData = trainingSet[1].ToArray();
                     this.Train(inputData, outputData);
                 }
                 i++;
+            }
+            foreach (var trainingSet in data.learningData)
+            {
+                var inputData = trainingSet[0].ToArray();
+                var outputData = trainingSet[1].ToArray();
+                this.Propagate(inputData);
+                Console.WriteLine($"Input data: ({string.Join(",", inputData)})   Output data: ({this.OutputLayer.Neurons[0].Value})  Ideal ({string.Join(",", outputData)})");
             }
         }
     }
