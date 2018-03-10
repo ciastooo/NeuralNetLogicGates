@@ -10,6 +10,7 @@ namespace NeuralNetLogicGates
         {
             var test = new NeuralNet(2, 1, 3, 5);
             var andGate = new AndGate();
+            var notGate = new NotGate();
             test.TrainWithData(andGate, 10000);
         }
     }
