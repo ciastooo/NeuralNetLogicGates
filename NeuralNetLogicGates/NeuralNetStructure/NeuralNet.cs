@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NeuralNetLogicGates.ActivationFunctions;
+using NeuralNetLogicGates.DataModels;
 
 namespace NeuralNetLogicGates.NeuralNetStructure
 {
@@ -91,44 +92,71 @@ namespace NeuralNetLogicGates.NeuralNetStructure
             }
             this.Propagate(input);
             // calculating delta for weights that are before output neurons
-            for(int neuronIndex = 0; neuronIndex < this.OutputLayer.NeuronsCount; neuronIndex++)
+            for (int neuronIndex = 0; neuronIndex < this.OutputLayer.NeuronsCount; neuronIndex++)
             {
                 Neuron outputNeuron = this.OutputLayer.Neurons[neuronIndex];
                 outputNeuron.Delta = (outputNeuron.Value - output[neuronIndex]) * ActivationFunctions.Sigmoid.Derivative(outputNeuron.Value);
-                foreach(Dendrite dendrite in outputNeuron.PreviousDendrites)
+                foreach (Dendrite dendrite in outputNeuron.PreviousDendrites)
                 {
                     dendrite.Delta = outputNeuron.Delta * dendrite.PreviousNeuron.Value;
                 }
             }
             // calculating delta for the rest of weights
-            for(int layerIndex = this.LayersCount-2; layerIndex > 0; layerIndex--)
+            for (int layerIndex = this.LayersCount - 2; layerIndex > 0; layerIndex--)
             {
                 Layer currentLayer = this.Layers[layerIndex];
-                for(int neuronIndex = 0; neuronIndex < currentLayer.NeuronsCount; neuronIndex++)
+                for (int neuronIndex = 0; neuronIndex < currentLayer.NeuronsCount; neuronIndex++)
                 {
                     Neuron currentNeuron = currentLayer.Neurons[neuronIndex];
                     currentNeuron.Delta = 0;
-                    foreach(Dendrite dendrite in currentNeuron.NextDendrites)
+                    foreach (Dendrite dendrite in currentNeuron.NextDendrites)
                     {
                         currentNeuron.Delta += dendrite.NextNeuron.Delta * dendrite.Weight;
                     }
                     currentNeuron.Delta *= ActivationFunctions.Sigmoid.Derivative(currentNeuron.Value);
-                    foreach(Dendrite dendrite in currentNeuron.PreviousDendrites)
+                    foreach (Dendrite dendrite in currentNeuron.PreviousDendrites)
                     {
                         dendrite.Delta = currentNeuron.Delta * dendrite.PreviousNeuron.Value;
                     }
                 }
             }
             // updating weights
-            foreach(Layer layer in this.Layers)
+            foreach (Layer layer in this.Layers)
             {
-                foreach(Neuron neuron in layer.Neurons)
+                foreach (Neuron neuron in layer.Neurons)
                 {
-                    foreach(Dendrite dendrite in neuron.NextDendrites)
+                    foreach (Dendrite dendrite in neuron.NextDendrites)
                     {
-                        dendrite.Weight -= dendrite.Delta*this.TrainingRate;
+                        dendrite.Weight -= dendrite.Delta * this.TrainingRate;
                     }
                 }
+            }
+        }
+
+        public void TrainWithData(LogicGate data, int trainingIterations = 10)
+        {
+            if(this.Layers.Count == 0)
+            {
+                throw new Exception("Neural net not initialized");
+            }
+            if (trainingIterations < 1 || data == null || data.learningData == null || data.learningData.Count == 0)
+            {
+                throw new Exception("Wrong learning data");
+            }
+            int i = 0;
+            while(i < trainingIterations)
+            {
+                foreach(var trainingSet in data.learningData)
+                {
+                    if(trainingSet.Count < 2)
+                    {
+                        throw new Exception("Wrong learning data");
+                    }
+                    var inputData = trainingSet[0].ToArray();
+                    var outputData = trainingSet[1].ToArray();
+                    this.Train(inputData, outputData);
+                }
+                i++;
             }
         }
     }

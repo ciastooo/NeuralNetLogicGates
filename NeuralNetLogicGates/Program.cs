@@ -1,5 +1,6 @@
 ﻿using System;
 using NeuralNetLogicGates.NeuralNetStructure;
+using NeuralNetLogicGates.DataModels;
 
 namespace NeuralNetLogicGates
 {
@@ -7,46 +8,26 @@ namespace NeuralNetLogicGates
     {
         static void Main(string[] args)
         {
-            var test = new NeuralNet(2, 1, 2, 3);
-            double[] a = {0, 0};
-            double[] aa = {0};
-            double[] b = {1, 0};
-            double[] bb = {0};
-            double[] c = {0, 1};
-            double[] cc = {0};
-            double[] d = {1, 1};
-            double[] dd = {1};
-            int j = 0;
-            test.Propagate(a);
-            Console.WriteLine(test.OutputLayer.Neurons[0].Value);
-            test.Propagate(d);
-            Console.WriteLine(test.OutputLayer.Neurons[0].Value);
-            for(int i = 0; i < 100000; i++) {
-                switch(j) {
-                case 0:
-                        test.Train(a, aa);
-                break;
-                case 1:
-                        test.Train(b, bb);
-                break;
-                case 2:
-                        test.Train(c,cc);
-                break;
-                case 3:
-                default:
-                        test.Train(d, dd);
-                break;
-                }
-                j++;
-                if(j==4) {
-                    j = 0;
-                }
-            }
-            Console.WriteLine("END");
-            test.Propagate(a);
-            Console.WriteLine(test.OutputLayer.Neurons[0].Value);
-            test.Propagate(d);
-            Console.WriteLine(test.OutputLayer.Neurons[0].Value);
+            var test = new NeuralNet(2, 1, 3, 5);
+            var andGate = new AndGate();
+            test.Propagate(new double[] { 1, 1 });
+            Console.WriteLine($"Input data: (1,1) Output data: ({test.OutputLayer.Neurons[0].Value}) ideal (1)");
+            test.Propagate(new double[] { 1, 0 });
+            Console.WriteLine($"Input data: (1,0) Output data: ({test.OutputLayer.Neurons[0].Value}) ideal (0)");
+            test.Propagate(new double[] { 0, 1 });
+            Console.WriteLine($"Input data: (0,1) Output data: ({test.OutputLayer.Neurons[0].Value}) ideal (0)");
+            test.Propagate(new double[] { 0, 0 });
+            Console.WriteLine($"Input data: (0,1) Output data: ({test.OutputLayer.Neurons[0].Value}) ideal (0)");
+            Console.WriteLine("Training...");
+            test.TrainWithData(andGate, 10000);
+            test.Propagate(new double[] { 1, 1 });
+            Console.WriteLine($"Input data: (1,1) Output data: ({test.OutputLayer.Neurons[0].Value}) ideal (1)");
+            test.Propagate(new double[] { 1, 0 });
+            Console.WriteLine($"Input data: (1,0) Output data: ({test.OutputLayer.Neurons[0].Value}) ideal(0)");
+            test.Propagate(new double[] { 0, 1 });
+            Console.WriteLine($"Input data: (0,1) Output data: ({test.OutputLayer.Neurons[0].Value}) ideal(0)");
+            test.Propagate(new double[] { 0, 0 });
+            Console.WriteLine($"Input data: (0,0) Output data: ({test.OutputLayer.Neurons[0].Value}) ideal(0)");
         }
     }
 }
